@@ -1,0 +1,15 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: locustio-lb
+  namespace: monitoring
+spec:
+  type: LoadBalancer
+  selector:
+    app: locustio-master
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8089
+      name: locustio-lb

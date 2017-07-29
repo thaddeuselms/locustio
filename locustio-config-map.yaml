@@ -1,0 +1,39 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: locustio-target
+  namespace: monitoring
+data:
+  locust_url: http://locustio.example.com
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: locustio-file
+  namespace: monitoring
+data:
+  locust_file.py: |-
+    from locust import HttpLocust, TaskSet, task
+
+    class MyTaskSet(TaskSet):
+        @task(2)
+        def index(self):
+            self.client.get("/")
+
+        @task(1)
+        def about(self):
+            self.client.get("/about/")
+
+        @task(1)
+        def contact(self):
+            self.client.get("/contact/")
+
+        @task(1)
+        def blog(self):
+            self.client.get("/blog/")
+
+    class MyLocust(HttpLocust):
+        task_set = MyTaskSet
+        min_wait = 5000
+        max_wait = 15000

@@ -1,0 +1,19 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: locustio-master-service
+  namespace: monitoring
+spec:
+  type: NodePort
+  selector:
+    app: locustio-master
+  ports:
+    - protocol: TCP
+      port: 5557
+      targetPort: 5557
+      name: locustio-master5557
+    - protocol: TCP
+      port: 5558
+      targetPort: 5558
+      name: locustio-master5558

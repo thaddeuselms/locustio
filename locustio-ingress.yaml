@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: locustio-gce
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  backend:
+    serviceName: locustio-master-service
+    servicePort: 80

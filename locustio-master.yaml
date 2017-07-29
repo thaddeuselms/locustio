@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: locustio-master
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: locustio-master
+    spec:
+      # Deploy to specify node pools
+      # nodeSelector:
+      #  cloud.google.com/gke-nodepool: default-pool    
+      containers:
+      - name: locustio-master
+        image: thaddeusct/locustio
+        ports:
+        - containerPort: 8089
+          containerPort: 5557
+          containerPort: 5558
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8089       
+        env:
+        - name: LOCUST_TARGET_URL
+          valueFrom:
+            configMapKeyRef:
+              name: locustio-target
+              key: locust_url
+        command: ["/usr/bin/locust", "-f", "/locust/locust_file.py", "--master", "--host=$(LOCUST_TARGET_URL)"]
+        volumeMounts:
+        - mountPath: /locust/locust_file.py
+          name: locustio-file
+          subPath: locust_file.py
+      volumes:
+      - name: locustio-file
+        configMap:
+            name: locustio-file          
+
